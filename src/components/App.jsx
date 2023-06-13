@@ -1,20 +1,17 @@
 import { Component } from 'react';
-
-import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
-import { getImages } from '../utils/image-service';
+import { Searchbar } from 'components/Searchbar/Searchbar';
+import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
+import { getImages } from '../../utils/image-service';
 
 export class App extends Component {
   state = {
     query: '',
+    imageProfiles: [],
     isLoading: false,
   };
 
-  // onSubmit = value => {
-  //   this.setState({ query: value });
-  // };
-
-  getPhotos = async query => {
+  getImageProfiles = async query => {
     if (!query) {
       return;
     }
@@ -22,16 +19,32 @@ export class App extends Component {
     try {
       const data = await getImages(query, 1);
       console.log(data);
+      this.setState(prevState => ({
+        imageProfiles: [...prevState.imageProfiles, ...data.hits],
+      }));
+      console.log(this.state.imageProfiles);
     } catch {
       window.alert('Somthing went wrong');
     }
   };
 
   render() {
+    const { imageProfiles } = this.state;
     return (
       <div>
-        <Searchbar onSubmit={this.getPhotos} />
-        <ImageGallery></ImageGallery>
+        <ImageGallery>
+          <Searchbar onSubmit={this.getImageProfiles} />
+          <ul>
+            {imageProfiles.map(element => (
+              <ImageGalleryItem
+                key={element.id}
+                image={element.webformatURL}
+                alt={element.tags}
+                largeImage={element.largeImageURL}
+              />
+            ))}
+          </ul>
+        </ImageGallery>
       </div>
     );
   }

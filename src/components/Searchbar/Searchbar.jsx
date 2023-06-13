@@ -2,14 +2,22 @@ import { Component } from 'react';
 
 export class Searchbar extends Component {
   state = {
-    query: 'cat',
+    query: '',
   };
+
+  handleChange = event => {
+    event.preventDefault();
+    this.setState({ query: event.target.value });
+  };
+
   handleSubmit = event => {
     event.preventDefault();
     if (this.state.query === '') {
       window.alert('Something went wrong');
       return;
     }
+    console.log(this.props);
+    console.log(this.state);
     this.props.onSubmit(this.state.query);
     this.setState({ query: '' });
   };
@@ -22,6 +30,7 @@ export class Searchbar extends Component {
             <span>Search</span>
           </button>
           <input
+            onChange={this.handleChange}
             type="text"
             autoComplete="off"
             autoFocus
