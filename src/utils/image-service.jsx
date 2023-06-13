@@ -11,7 +11,7 @@ axios.defaults.params = {
 };
 // const url = `${axios.defaults.baseURL}?q=${query}&page=${page}&key=${API_KEY}&image_type=${axios.defaults.params.image_type}&orientation=${axios.defaults.params.orientation}&per_page=${axios.defaults.params.per_page}`;
 
-export const getImages = async (query, page) => {
+export const fetchImages = async (query, page) => {
   try {
     const { data } = await axios.get(`?key=${API_KEY}&q=${query}&page=${page}`);
     return data;

@@ -1,15 +1,18 @@
 import { Component } from 'react';
-import { Searchbar } from 'components/Searchbar/Searchbar';
-import { getImages } from '../../utils/image-service';
+// import { Searchbar } from 'components/Searchbar/Searchbar';
+// import { getImages } from '../../utils/image-service';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
+import css from './ImageGallery.module.css'
 
 export class ImageGallery extends Component {
+  state = {};
+
   render() {
-    const { imageProfiles } = this.state;
+    const { imageProfiles } = this.props;
+    console.log(imageProfiles);
     return (
       <>
-        <Searchbar onSubmit={this.getPhotos} />
-        <ul>
+        <ul className={css.ImageGallery}>
           {imageProfiles.map(element => (
             <ImageGalleryItem
               key={element.id}

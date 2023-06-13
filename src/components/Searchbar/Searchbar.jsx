@@ -3,6 +3,7 @@ import { Component } from 'react';
 export class Searchbar extends Component {
   state = {
     query: '',
+    page: 1,
   };
 
   handleChange = event => {
@@ -10,26 +11,36 @@ export class Searchbar extends Component {
     this.setState({ query: event.target.value });
   };
 
-  handleSubmit = event => {
-    event.preventDefault();
-    if (this.state.query === '') {
-      window.alert('Something went wrong');
-      return;
-    }
-    console.log(this.props);
-    console.log(this.state);
-    this.props.onSubmit(this.state.query);
-    this.setState({ query: '' });
-  };
+  //   showCurrentPage = () => {
+  //     this.setState(prevState => ({
+  //       page: prevState.page + 1,
+  //     }));
+  //     return this.state.page;
+  //   };
+
+  //   handleSubmit = event => {
+  //     event.preventDefault();
+  //     if (this.state.query === '') {
+  //       return;
+  //     }
+  //     this.setState(prevState => ({
+  //       page: prevState.page + 1,
+  //     }));
+  //     this.props.onSubmit(this.state.query, this.state.page);
+  //     // this.setState({ query: '' });
+  //   };
 
   render() {
+    const { getPhotos } = this.props;
+    // const { query } = this.state;
     return (
       <header>
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={getPhotos}>
           <button type="submit">
             <span>Search</span>
           </button>
           <input
+            // value={query}
             onChange={this.handleChange}
             type="text"
             autoComplete="off"
