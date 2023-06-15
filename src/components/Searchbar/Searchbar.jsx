@@ -22,6 +22,9 @@ export class Searchbar extends Component {
   //   };
 
   //   componentDidUpdate() {
+  //     const { queryUpdate } = this.props;
+  //     queryUpdate();
+  //   }
   //     // event.preventDefault();
   //     if (this.state.query === '') {
   //       return;
@@ -48,9 +51,10 @@ export class Searchbar extends Component {
   //     // this.setState({ query: '' });
   //   };
 
-  handleChange = event => {
+  handleChange = async event => {
     event.preventDefault();
-    this.setState({ query: event.target.value });
+    await this.setState({ query: event.target.value });
+    this.props.onChange(this.state.query);
     console.log(this.state);
   };
 

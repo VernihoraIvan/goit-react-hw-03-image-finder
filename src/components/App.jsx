@@ -7,21 +7,22 @@ import { Button } from 'components/Button/Button';
 
 export class App extends Component {
   state = {
+    page: 1,
     query: '',
     imageProfiles: [],
-    // isLoading: false,
+    isLoading: false,
     totalHits: '',
     isButtonActive: false,
     st: 'app',
-    page: 1,
   };
 
   getPhotos = async (query, page) => {
     if (!query) {
       return;
     }
-    this.setState({ isLoading: true });
+
     try {
+      this.setState({ isLoading: true });
       const data = await fetchImages(query, page);
       console.log(data);
       this.setState({
@@ -33,14 +34,19 @@ export class App extends Component {
       window.alert('Somthing went wrong');
     } finally {
       console.log(this.state);
+      this.setState({ isLoading: false });
     }
   };
 
-  handleChange = event => {
-    event.preventDefault();
-    this.setState({ query: event.target.value });
+  handleAgentChange = value => {
+    // event.preventDefault();
+    this.setState({ query: value });
     console.log(this.state);
   };
+
+  // queryUpdate = event => {
+  //   this.setState({ query:  });
+  // };
 
   // handleSubmit = event => {
   //   event.preventDefault();
@@ -55,16 +61,17 @@ export class App extends Component {
   //   // this.setState({ query: '' });
   // };
 
-  handleLoadMore = async () => {
+  handleLoadMore = () => {
     const { query, page, imageProfiles } = this.state;
-    // const currentPage = page + 1;
+    const currentPage = page + 1;
     try {
-      const images = await fetchImages(query, page);
-      this.setState(prevState => ({
-        imageProfiles: [...prevState.imageProfiles, ...images.hits],
-        totalHits: images.totalHits,
-        page: prevState.page + 1,
-      }));
+      fetchImages(query, currentPage).then(images => {
+        this.setState(prevState => ({
+          imageProfiles: [...prevState.imageProfiles, ...images.hits],
+          totalHits: images.totalHits,
+          page: currentPage,
+        }));
+      });
     } catch {
       window.alert('Somthing went wrong backend');
     } finally {
@@ -93,9 +100,10 @@ export class App extends Component {
     return (
       <div>
         <Searchbar
-          imageProfiles={imageProfiles}
+          // imageProfiles={imageProfiles}
           onSubmit={this.getPhotos}
-          onChange={this.handleChange}
+          onChange={this.handleAgentChange}
+          // queryUpdate={this.queryUpdate}
         />
         <ImageGallery imageProfiles={imageProfiles} />
         {isButtonActive && <Button onClick={this.handleLoadMore} />}
