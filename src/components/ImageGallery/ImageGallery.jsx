@@ -71,7 +71,7 @@ export class ImageGallery extends Component {
   //   };
 
   render() {
-    const { imageProfiles } = this.props;
+    const { imageProfiles, modalOpen } = this.props;
     console.log(imageProfiles);
     return (
       <>
@@ -82,6 +82,7 @@ export class ImageGallery extends Component {
               image={element.webformatURL}
               alt={element.tags}
               largeImage={element.largeImageURL}
+              modalOpen={modalOpen}
             />
           ))}
         </ul>

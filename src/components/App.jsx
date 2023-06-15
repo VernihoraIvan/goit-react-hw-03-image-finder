@@ -4,6 +4,8 @@ import { Searchbar } from 'components/Searchbar/Searchbar';
 // import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 import { fetchImages } from '../utils/image-service';
 import { Button } from 'components/Button/Button';
+import { Loader } from './Loader/Loader';
+import { Modal } from './Modal/Modal';
 
 export class App extends Component {
   state = {
@@ -14,6 +16,8 @@ export class App extends Component {
     totalHits: '',
     isButtonActive: false,
     st: 'app',
+    showModal: false,
+    largeImage: '',
   };
 
   getPhotos = async (query, page) => {
@@ -94,8 +98,13 @@ export class App extends Component {
     }
   }
 
+  modalOpen = largeImage => {
+    this.setState({ largeImage, showModal: true });
+  };
+
   render() {
-    const { imageProfiles, isButtonActive } = this.state;
+    const { imageProfiles, isButtonActive, isLoading, largeImage, showModal } =
+      this.state;
 
     return (
       <div>
@@ -105,8 +114,13 @@ export class App extends Component {
           onChange={this.handleAgentChange}
           // queryUpdate={this.queryUpdate}
         />
-        <ImageGallery imageProfiles={imageProfiles} />
+        <ImageGallery
+          imageProfiles={imageProfiles}
+          modalOpen={this.modalOpen}
+        />
+        {isLoading && <Loader />}
         {isButtonActive && <Button onClick={this.handleLoadMore} />}
+        {showModal && <Modal largeImage={largeImage} onClose={this.onClose} />}
       </div>
     );
   }
