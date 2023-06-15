@@ -9,9 +9,10 @@ export class App extends Component {
   state = {
     query: '',
     imageProfiles: [],
-    isLoading: false,
+    // isLoading: false,
     totalHits: '',
     isButtonActive: false,
+    st: 'app',
     page: 1,
   };
 
@@ -23,39 +24,51 @@ export class App extends Component {
     try {
       const data = await fetchImages(query, page);
       console.log(data);
-      this.setState(prevState => ({
-        imageProfiles: [...prevState.imageProfiles, ...data.hits],
+      this.setState({
+        imageProfiles: data.hits,
         totalHits: data.totalHits,
-      }));
+      });
       // this.setState({ query: '' });
     } catch {
       window.alert('Somthing went wrong');
+    } finally {
+      console.log(this.state);
     }
   };
 
-  handleSubmit = event => {
+  handleChange = event => {
     event.preventDefault();
-    if (this.state.query === '') {
-      return;
-    }
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
-    this.props.onSubmit(this.state.query, this.state.page);
-    // this.setState({ query: '' });
+    this.setState({ query: event.target.value });
+    console.log(this.state);
   };
+
+  // handleSubmit = event => {
+  //   event.preventDefault();
+  //   if (this.state.query === '') {
+  //     return;
+  //   }
+  //   this.setState(prevState => ({
+  //     page: prevState.page + 1,
+  //   }));
+  //   this.props.onSubmit(this.state.query, this.state.page);
+  //   console.log(this.state);
+  //   // this.setState({ query: '' });
+  // };
 
   handleLoadMore = async () => {
-    const { query, imageProfiles, page } = this.state;
-    const currentPage = page + 1;
+    const { query, page, imageProfiles } = this.state;
+    // const currentPage = page + 1;
     try {
-      const images = await fetchImages(query, currentPage);
+      const images = await fetchImages(query, page);
       this.setState(prevState => ({
         imageProfiles: [...prevState.imageProfiles, ...images.hits],
         totalHits: images.totalHits,
+        page: prevState.page + 1,
       }));
     } catch {
       window.alert('Somthing went wrong backend');
+    } finally {
+      console.log(this.state);
     }
   };
 
@@ -79,7 +92,11 @@ export class App extends Component {
 
     return (
       <div>
-        <Searchbar onSubmit={this.getPhotos} />
+        <Searchbar
+          imageProfiles={imageProfiles}
+          onSubmit={this.getPhotos}
+          onChange={this.handleChange}
+        />
         <ImageGallery imageProfiles={imageProfiles} />
         {isButtonActive && <Button onClick={this.handleLoadMore} />}
       </div>

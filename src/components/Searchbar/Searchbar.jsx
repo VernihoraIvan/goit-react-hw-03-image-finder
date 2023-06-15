@@ -4,12 +4,15 @@ export class Searchbar extends Component {
   state = {
     query: '',
     page: 1,
+    imageProfiles: [],
+    st: 'searchbar',
   };
 
-  handleChange = event => {
-    event.preventDefault();
-    this.setState({ query: event.target.value });
-  };
+  //   handleChange = event => {
+  //     event.preventDefault();
+  //     this.setState({ query: event.target.value });
+  //     console.log(this.state);
+  //   };
 
   //   showCurrentPage = () => {
   //     this.setState(prevState => ({
@@ -18,29 +21,66 @@ export class Searchbar extends Component {
   //     return this.state.page;
   //   };
 
+  //   componentDidUpdate() {
+  //     // event.preventDefault();
+  //     if (this.state.query === '') {
+  //       return;
+  //     }
+  //     // this.setState(prevState => ({
+  //     //   page: prevState.page + 1,
+  //     // }));
+  //     this.props.onSubmit(this.state.query, this.state.page);
+  //     console.log(this.state);
+
+  //     this.setState({ query: '' });
+  //   }
   //   handleSubmit = event => {
   //     event.preventDefault();
   //     if (this.state.query === '') {
   //       return;
   //     }
-  //     this.setState(prevState => ({
-  //       page: prevState.page + 1,
-  //     }));
+  //     // this.setState(prevState => ({
+  //     //   page: prevState.page + 1,
+  //     // }));
   //     this.props.onSubmit(this.state.query, this.state.page);
+  //     console.log(this.state);
+
   //     // this.setState({ query: '' });
   //   };
 
+  handleChange = event => {
+    event.preventDefault();
+    this.setState({ query: event.target.value });
+    console.log(this.state);
+  };
+
+  handleSubmit = event => {
+    event.preventDefault();
+    if (this.state.query === '') {
+      return;
+    }
+    if (this.state.query === event.target.value) {
+      return;
+    }
+    // this.setState(prevState => ({
+    //   page: prevState.page + 1,
+    // }));
+    this.props.onSubmit(this.state.query, this.state.page);
+    console.log(this.state);
+    this.setState({ query: '' });
+  };
+
   render() {
-    const { getPhotos } = this.props;
-    // const { query } = this.state;
+    // const { onChange } = this.props;
+    const { query } = this.state;
     return (
       <header>
-        <form onSubmit={getPhotos}>
+        <form onSubmit={this.handleSubmit}>
           <button type="submit">
             <span>Search</span>
           </button>
           <input
-            // value={query}
+            value={query}
             onChange={this.handleChange}
             type="text"
             autoComplete="off"
