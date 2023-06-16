@@ -1,6 +1,7 @@
 import css from './ImageGalleryItem.module.css';
+import PropTypes from 'prop-types';
 
-const ImageGalleryItem = ({ image, alt, largeImage, modalOpen }) => {
+export const ImageGalleryItem = ({ image, alt, largeImage, modalOpen }) => {
   return (
     <li className={css.ImageGalleryItem} onClick={() => modalOpen(largeImage)}>
       <img className={css.ImageGalleryItem_image} src={image} alt={alt} />
@@ -8,4 +9,9 @@ const ImageGalleryItem = ({ image, alt, largeImage, modalOpen }) => {
   );
 };
 
-export default ImageGalleryItem;
+ImageGalleryItem.propTypes = {
+  image: PropTypes.string.isRequired,
+  alt: PropTypes.string.isRequired,
+  largeImage: PropTypes.string.isRequired,
+  modalOpen: PropTypes.func.isRequired,
+};
