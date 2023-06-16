@@ -101,6 +101,9 @@ export class App extends Component {
   modalOpen = largeImage => {
     this.setState({ largeImage, showModal: true });
   };
+  onClose = () => {
+    this.setState({ showModal: false });
+  };
 
   render() {
     const { imageProfiles, isButtonActive, isLoading, largeImage, showModal } =
