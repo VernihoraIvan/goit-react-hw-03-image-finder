@@ -18,18 +18,27 @@ export class App extends Component {
     largeImage: '',
   };
 
+  handleSubmit = query => {
+    if (query === this.state.query) {
+      return;
+    }
+    this.setState({ query, page: 1, imageProfiles: [] });
+  };
+
   getPhotos = async (query, page) => {
     if (!query) {
       return;
     }
-
     try {
       this.setState({ isLoading: true });
       const data = await fetchImages(query, page);
-      this.setState({
-        imageProfiles: data.hits,
+      if (data.hits.length === 0) {
+        return;
+      }
+      this.setState(prevState => ({
+        imageProfiles: [...prevState.imageProfiles, ...data.hits],
         totalHits: data.totalHits,
-      });
+      }));
     } catch {
       window.alert('Somthing went wrong');
     } finally {
@@ -40,23 +49,21 @@ export class App extends Component {
   handleAgentChange = value => {
     this.setState({ query: value });
   };
+
   handleLoadMore = () => {
-    const { query, page } = this.state;
-    const currentPage = page + 1;
-    try {
-      fetchImages(query, currentPage).then(images => {
-        this.setState(prevState => ({
-          imageProfiles: [...prevState.imageProfiles, ...images.hits],
-          totalHits: images.totalHits,
-          page: currentPage,
-        }));
-      });
-    } catch {
-      window.alert('Somthing went wrong backend');
-    }
+    this.setState(prevState => ({ page: prevState.page + 1 }));
   };
 
   componentDidUpdate(prevProps, prevState) {
+    const { page, query } = this.state;
+    if (query !== prevState.query || prevState.page !== page) {
+      this.setState({
+        isLoader: true,
+        isButtonActive: page !== 1,
+      });
+      this.getPhotos(query, page);
+    }
+
     if (
       !prevState.isButtonActive &&
       this.state.totalHits > this.state.imageProfiles.length
@@ -84,10 +91,7 @@ export class App extends Component {
 
     return (
       <div>
-        <Searchbar
-          onSubmit={this.getPhotos}
-          onChange={this.handleAgentChange}
-        />
+        <Searchbar onSubmit={this.handleSubmit} />
         <ImageGallery
           imageProfiles={imageProfiles}
           modalOpen={this.modalOpen}

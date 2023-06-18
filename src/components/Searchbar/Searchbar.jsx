@@ -5,18 +5,16 @@ import PropTypes from 'prop-types';
 export class Searchbar extends Component {
   state = {
     query: '',
-    page: 1,
-    imageProfiles: [],
   };
 
   handleChange = async event => {
     event.preventDefault();
     await this.setState({ query: event.target.value });
-    this.props.onChange(this.state.query);
   };
 
   handleSubmit = event => {
     event.preventDefault();
+    this.setState({ query: event.target.value });
     if (this.state.query === '') {
       return;
     }
@@ -52,5 +50,4 @@ export class Searchbar extends Component {
 
 Searchbar.propTypes = {
   onSubmit: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
 };
