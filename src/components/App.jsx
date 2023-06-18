@@ -46,10 +46,6 @@ export class App extends Component {
     }
   };
 
-  handleAgentChange = value => {
-    this.setState({ query: value });
-  };
-
   handleLoadMore = () => {
     this.setState(prevState => ({ page: prevState.page + 1 }));
   };
